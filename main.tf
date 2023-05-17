@@ -1,7 +1,7 @@
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "kv" {
-  name                        = format("kvexampledemo%s%s", var.location)
+  name                        = format("kvexampledemo%s%s", var.location, var.environment)
   location                    = var.location
   resource_group_name         = var.resource_group_name
   enabled_for_disk_encryption = true
@@ -39,7 +39,7 @@ resource "azurerm_key_vault_access_policy" "kv_access_policy" {
 }
 
 resource "azurerm_key_vault_secret" "kv_secret" {
-  name         = format("kv-secret%s%s", var.location, local.resource_tags.environment)
+  name         = format("kv-secret%s%s", var.location, var.environment)
   value        = var.storage_account_primary_access_key
   key_vault_id = azurerm_key_vault.kv.id
   depends_on   = [azurerm_key_vault_access_policy.kv_access_policy]
